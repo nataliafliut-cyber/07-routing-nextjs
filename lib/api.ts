@@ -15,14 +15,20 @@ const api = axios.create({
 
 export const fetchNotes = async (
   page: number = 1,
-  search: string = ''
+  search: string = '',
+  tag?: string
 ): Promise<FetchNotesResponse> => {
-  const { data } = await api.get<FetchNotesResponse>('/notes', {
-    params: {
-      page,
-      search: search || undefined,
-    },
-  });
+  const params: Record<string, string | number> = { page };
+
+  if (search) {
+    params.search = search;
+  }
+
+  if (tag && tag !== 'all') {
+    params.tag = tag;
+  }
+
+  const { data } = await api.get<FetchNotesResponse>('/notes', { params });
   return data;
 };
 
